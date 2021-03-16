@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "571795313541",
+    "project_id": "iitg-idcard-scanner",
+    "storage_bucket": "iitg-idcard-scanner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571795313541:android:0a4bcf4357923421652aec",
+        "android_client_info": {
+          "package_name": "com.example.iitg_idcard_scanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571795313541-pffkhn354ppsdkg2l9q68oo17kprkk4s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iitg_idcard_scanner",
+            "certificate_hash": "8fbf625270ebe21f09a0edd536f3ab368419da0a"
+          }
+        },
+        {
+          "client_id": "571795313541-l999uejjgvhddbtqp8tpip4lmadmph87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSsyow43JogiLii5dn6PtmlbQolgxhi4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571795313541-l999uejjgvhddbtqp8tpip4lmadmph87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
