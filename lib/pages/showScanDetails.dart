@@ -38,7 +38,7 @@ class _ShowScanDetailsState extends State<ShowScanDetails> {
                   if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
                   else {
-                    String currentStatus = 'In campus';
+                    String currentStatus;
                     DateTime lastCheckoutTime = DateTime.now();
                     int len = (snapshot.data.docs.length);
                     bool exists = false;
@@ -51,13 +51,14 @@ class _ShowScanDetailsState extends State<ShowScanDetails> {
                           lastCheckoutTime =
                               v.data()['lastCheckoutTime'].toDate();
                       }
-                      if (!exists) {
-                        final firestoreInstance = FirebaseFirestore.instance;
-                        firestoreInstance
+                    }
+                    if (!exists) {
+                      currentStatus = 'In Campus';
+                      final firestoreInstance = FirebaseFirestore.instance;
+                      firestoreInstance
                           .collection('Past Timings')
-                              .doc(rollNumber)
-                              .set({'timings': []});
-                      }
+                          .doc(rollNumber)
+                          .set({'timings': []}, SetOptions(merge: true));
                     }
 
                     return Column(
