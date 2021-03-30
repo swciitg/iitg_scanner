@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:gsheets_get/gsheets_get.dart' as gsheet;
 import 'package:iitg_idcard_scanner/functions/checkRoll.dart';
+import 'package:iitg_idcard_scanner/functions/checkRollElections.dart';
 import 'package:iitg_idcard_scanner/globals/myColors.dart';
 import 'package:iitg_idcard_scanner/globals/myFonts.dart';
 import 'package:iitg_idcard_scanner/globals/mySpaces.dart';
 import 'package:iitg_idcard_scanner/pages/showScanDetails.dart';
+import 'package:iitg_idcard_scanner/pages/validateElections/approved.dart';
+import 'package:iitg_idcard_scanner/pages/validateElections/rejected.dart';
 
 class ScanNow extends StatefulWidget {
   static String id = 'scan-now';
 
   @override
   _ScanNowState createState() => _ScanNowState();
+}
+
+Widget loadingDialog(BuildContext context) {
+  return new AlertDialog(
+      title: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      CircularProgressIndicator(),
+      MySpaces.hLargeGapInBetween,
+      MyFonts().body('Loading', MyColors.black),
+    ],
+  ));
 }
 
 class _ScanNowState extends State<ScanNow> {
@@ -68,13 +84,23 @@ class _ScanNowState extends State<ScanNow> {
                                   MyColors.white));
                           ScaffoldMessenger.of(context)
                               .showSnackBar(badReadSnackBar);
-                        } else
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ShowScanDetails(
-                                        rollNumber: rollNumber,
-                                      )));
+                        } else {
+                          // Send to a Loader Widget temporarily
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  loadingDialog(context));
+                          if (await checkRollElections(rollNumber) == true) {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => Approved(
+                                          rollNumber: rollNumber,
+                                        )));
+                          } else
+                            Navigator.pushNamed(context, Rejected.id);
+                        }
                       },
                       child: MyFonts().heading1('Scan Now', MyColors.white),
                       style: ElevatedButton.styleFrom(

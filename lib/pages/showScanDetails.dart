@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iitg_idcard_scanner/globals/myColors.dart';
 import 'package:iitg_idcard_scanner/globals/myFonts.dart';
 import 'package:iitg_idcard_scanner/globals/mySpaces.dart';
+import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
 import 'package:iitg_idcard_scanner/widgets/getRowDetails.dart';
 
 // ignore: must_be_immutable
@@ -87,13 +89,25 @@ class _ShowScanDetailsState extends State<ShowScanDetails> {
                                       .split(' ')[1]
                                       .split('.')[0]),
                               Visibility(
-                                visible: DateTime.now().difference(lastCheckoutTime).inHours>1,
+                                visible: DateTime.now()
+                                        .difference(lastCheckoutTime)
+                                        .inHours >
+                                    49,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.warning, color:  MyColors.red,),
-                                    MySpaces.hSmallestGapInBetween,
-                                    MyFonts().heading1('You are late', MyColors.red),
+                                    Icon(
+                                      CupertinoIcons
+                                          .exclamationmark_triangle_fill,
+                                      color: MyColors.red,
+                                      size: 50,
+                                    ),
+                                    MySpaces.hSmallGapInBetween,
+                                    Expanded(
+                                      child: MyFonts().heading1(
+                                          'You are late! Please send to Guest House',
+                                          MyColors.red),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -137,7 +151,11 @@ class _ShowScanDetailsState extends State<ShowScanDetails> {
                                       ]),
                                     });
                                   }
-                                  Navigator.pop(context);
+                                  // Send back to home and forget!
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (_) => HomeManagement()),
+                                      (Route<dynamic> route) => false);
                                 },
                                 child: MyFonts().heading1(
                                     (currentStatus == 'In campus')

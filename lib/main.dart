@@ -5,6 +5,8 @@ import 'package:iitg_idcard_scanner/pages/scanNow.dart';
 import 'package:iitg_idcard_scanner/pages/showScanDetails.dart';
 import 'package:iitg_idcard_scanner/pages/splash.dart';
 import 'package:iitg_idcard_scanner/pages/studentsList.dart';
+import 'package:iitg_idcard_scanner/pages/validateElections/approved.dart';
+import 'package:iitg_idcard_scanner/pages/validateElections/rejected.dart';
 
 import 'globals/myColors.dart';
 
@@ -47,7 +49,9 @@ class _MyAppState extends State<MyApp> {
               HomeManagement.id: (context) => HomeManagement(),
               ScanNow.id: (context) => ScanNow(),
               StudentsList.id: (context) => StudentsList(),
-              ShowScanDetails.id:(context) => ShowScanDetails(),
+              ShowScanDetails.id: (context) => ShowScanDetails(),
+              Approved.id: (context) => Approved(),
+              Rejected.id: (context) => Rejected(),
             },
           );
         }
