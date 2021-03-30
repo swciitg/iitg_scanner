@@ -55,7 +55,8 @@ class _ShowScanDetailsState extends State<ShowScanDetails> {
                       }
                     }
                     if (!exists) {
-                      currentStatus = 'In Campus';
+                      print('First time');
+                      currentStatus = 'In campus';
                       final firestoreInstance = FirebaseFirestore.instance;
                       firestoreInstance
                           .collection('Past Timings')
