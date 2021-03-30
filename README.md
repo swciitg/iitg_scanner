@@ -8,6 +8,11 @@ This project was made by the Flutter Development Team, **Student's Web Committe*
 ## 🤔 Why did we make this?
 We made this to ensure hassle free entry and exit of students in and out of the campus, especially keeping in mind the limitations and restrictions imposed by the pandemic situation.
 
+## 🎬 Short Demo
+https://user-images.githubusercontent.com/45942031/111712638-0c5df480-8874-11eb-96b3-ca9986eee9e3.mp4
+
+
+
 ## ⚙️ Tech-Stack
 The application is built entirely with Flutter. For our backend services, we have made use of Firebase. We have also setup a CI/CD using GitHub Actions.
 
