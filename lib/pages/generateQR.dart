@@ -40,7 +40,7 @@ Future<ui.Image> _loadOverlayImage() async {
 class _QRGeneratorState extends State<QRGenerator> {
   @override
   Widget build(BuildContext context) {
-    String qrData = '';
+    String qrData;
 
     final qrFutureBuilder = FutureBuilder<ui.Image>(
         future: _loadOverlayImage(),
@@ -82,9 +82,18 @@ class _QRGeneratorState extends State<QRGenerator> {
           now.hour.toString() +
           now.minute.toString() +
           now.second.toString();
-      qrData = rollNumber + ',' + date;
+      qrData = rollNumber + "," + date;
       return SafeArea(
         child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.exit_to_app),
+                  onPressed: () {
+                    loginStore.signOut(context);
+                  })
+            ],
+          ),
           backgroundColor: MyColors.backgroundColor,
           body: Column(
             children: [
@@ -101,7 +110,7 @@ class _QRGeneratorState extends State<QRGenerator> {
               //   child: Text(qrData),
               // ),
               MyFonts().body(
-                  name + '\n' + degree + '\n' + rollNumber, MyColors.black)
+                  name + "\n" + degree + "\n" + rollNumber, MyColors.black)
             ],
           ),
         ),

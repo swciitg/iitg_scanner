@@ -10,6 +10,7 @@ class MicrosoftLogin extends StatefulWidget {
 }
 
 class _MicrosoftLoginState extends State<MicrosoftLogin> {
+  
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginStore>(
