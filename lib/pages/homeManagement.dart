@@ -2,8 +2,9 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iitg_idcard_scanner/globals/myColors.dart';
 import 'package:iitg_idcard_scanner/globals/myFonts.dart';
+import 'package:iitg_idcard_scanner/pages/generateQR.dart';
+import 'package:iitg_idcard_scanner/pages/scanQR.dart';
 import 'package:iitg_idcard_scanner/pages/studentsList.dart';
-import 'package:iitg_idcard_scanner/pages/scanNow.dart';
 
 class HomeManagement extends StatefulWidget {
   static String id = 'home-management';
@@ -18,7 +19,8 @@ class _HomeManagementState extends State<HomeManagement> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      ScanNow(),
+      QRGenerator(),
+      ScanQR(),
       StudentsList(),
     ];
     return Scaffold(
@@ -37,6 +39,8 @@ class _HomeManagementState extends State<HomeManagement> {
           });
         },
         items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.create), label: 'Generate Now'),
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code_scanner), label: 'Scan Now'),
           BottomNavigationBarItem(

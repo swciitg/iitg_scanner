@@ -1,12 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:iitg_idcard_scanner/pages/generateQR.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
-import 'package:iitg_idcard_scanner/pages/scanNow.dart';
+import 'package:iitg_idcard_scanner/pages/microsoft.dart';
+import 'package:iitg_idcard_scanner/pages/scanQR.dart';
 import 'package:iitg_idcard_scanner/pages/showScanDetails.dart';
 import 'package:iitg_idcard_scanner/pages/splash.dart';
 import 'package:iitg_idcard_scanner/pages/studentsList.dart';
 import 'package:iitg_idcard_scanner/pages/validateElections/approved.dart';
 import 'package:iitg_idcard_scanner/pages/validateElections/rejected.dart';
+import 'package:iitg_idcard_scanner/stores/login_store.dart';
+import 'package:provider/provider.dart';
 
 import 'globals/myColors.dart';
 
@@ -36,23 +40,32 @@ class _MyAppState extends State<MyApp> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-            supportedLocales: [
-              Locale('en'),
+          return MultiProvider(
+            providers: [
+              Provider<LoginStore>(
+                create: (_) => LoginStore(),
+              ),
             ],
-            title: 'IITG Scanner',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData.light(),
-            home: Splash(),
-            routes: {
-              Splash.id: (context) => Splash(),
-              HomeManagement.id: (context) => HomeManagement(),
-              ScanNow.id: (context) => ScanNow(),
-              StudentsList.id: (context) => StudentsList(),
-              ShowScanDetails.id: (context) => ShowScanDetails(),
-              Approved.id: (context) => Approved(),
-              Rejected.id: (context) => Rejected(),
-            },
+            child: MaterialApp(
+              supportedLocales: [
+                Locale('en'),
+              ],
+              title: 'IITG Scanner',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData.light(),
+              home: Splash(),
+              routes: {
+                MicrosoftLogin.id: (context) => MicrosoftLogin(),
+                Splash.id: (context) => Splash(),
+                HomeManagement.id: (context) => HomeManagement(),
+                ScanQR.id: (context) => ScanQR(),
+                QRGenerator.id: (context) => QRGenerator(),
+                StudentsList.id: (context) => StudentsList(),
+                ShowScanDetails.id: (context) => ShowScanDetails(),
+                Approved.id: (context) => Approved(),
+                Rejected.id: (context) => Rejected(),
+              },
+            ),
           );
         }
         // Otherwise, show something whilst waiting for initialization to complete
