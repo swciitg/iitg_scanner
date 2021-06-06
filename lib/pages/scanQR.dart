@@ -72,100 +72,112 @@ class _ScanQRState extends State<ScanQR> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: MyColors.backgroundColor,
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyFonts().title1('Scan QR Code', MyColors.blueLighter),
-              MySpaces.vGapInBetween,
-              Center(
-                child: Card(
-                  elevation: 10,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Image(
-                      image: AssetImage('assets/icons/qr-scan.png'),
-                      width: 250,
-                      height: 360,
+    return Consumer<otpLoginStore>(builder: (_, otpStore, __) {
+      return SafeArea(
+          child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: () {
+                  otpStore.signOut(context);
+                })
+          ],
+        ),
+        backgroundColor: MyColors.backgroundColor,
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MyFonts().title1('Scan QR Code', MyColors.blueLighter),
+                MySpaces.vGapInBetween,
+                Center(
+                  child: Card(
+                    elevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image(
+                        image: AssetImage('assets/icons/qr-scan.png'),
+                        width: 250,
+                        height: 360,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              MySpaces.vLargeGapInBetween,
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String _qrScanResult = await scanQRNormal();
-                        setState(() {
-                          qrScanRes = _qrScanResult;
-                        });
-                        String rollNumber = qrScanRes.split(",")[0];
-                        //Here the string received from the QRCode is in
-                        //the format :
-                        // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
-                        //Note that the date string is formatted with a T separator
-                        //between the date and time
-                        String datewithT = qrScanRes.split(",")[1];
-                        String email = qrScanRes.split(",")[2];
-                        String userId = qrScanRes.split(",")[3];
-                        DateTime timeScanned = DateTime.parse(datewithT);
-                        Duration difference =
-                            DateTime.now().difference(timeScanned);
-                        int minutes = difference.inMinutes;
+                MySpaces.vLargeGapInBetween,
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          String _qrScanResult = await scanQRNormal();
+                          setState(() {
+                            qrScanRes = _qrScanResult;
+                          });
+                          String rollNumber = qrScanRes.split(",")[0];
+                          //Here the string received from the QRCode is in
+                          //the format :
+                          // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
+                          //Note that the date string is formatted with a T separator
+                          //between the date and time
+                          String datewithT = qrScanRes.split(",")[1];
+                          String email = qrScanRes.split(",")[2];
+                          String userId = qrScanRes.split(",")[3];
+                          DateTime timeScanned = DateTime.parse(datewithT);
+                          Duration difference =
+                              DateTime.now().difference(timeScanned);
+                          int minutes = difference.inMinutes;
 
-                        if (minutes > maxMinutes || !checkRoll(rollNumber)) {
-                          final badReadSnackBar = SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: MyColors.black,
-                              content: MyFonts().body(
-                                  'Bad read! Please try again or re-generate the QR Code.',
-                                  MyColors.white));
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(badReadSnackBar);
-                        } else {
-                          // Send to a Loader Widget temporarily
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  loadingDialog(context));
+                          if (minutes > maxMinutes || !checkRoll(rollNumber)) {
+                            final badReadSnackBar = SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: MyColors.black,
+                                content: MyFonts().body(
+                                    'Bad read! Please try again or re-generate the QR Code.',
+                                    MyColors.white));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(badReadSnackBar);
+                          } else {
+                            // Send to a Loader Widget temporarily
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    loadingDialog(context));
 
-                          if (await checkRollMess(rollNumber, email)) {
-                            _firestore.collection('entries').add({
-                              "email": email,
-                              "time": timeScanned.toString(),
-                              "hostel": "subansiri"
-                            });
-                            Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) => Approved(
-                                          rollNumber: rollNumber,
-                                        )));
-                          } else
-                            Navigator.pushNamed(context, Rejected.id);
-                        }
-                      },
-                      child: MyFonts().heading1('Scan Now', MyColors.white),
-                      style: ElevatedButton.styleFrom(
-                          primary: MyColors.blueLighter,
-                          padding: EdgeInsets.all(15)),
+                            if (await checkRollMess(rollNumber, email)) {
+                              _firestore.collection('entries').add({
+                                "email": email,
+                                "time": timeScanned.toString(),
+                                "hostel": "subansiri"
+                              });
+                              Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Approved(
+                                            rollNumber: rollNumber,
+                                          )));
+                            } else
+                              Navigator.pushNamed(context, Rejected.id);
+                          }
+                        },
+                        child: MyFonts().heading1('Scan Now', MyColors.white),
+                        style: ElevatedButton.styleFrom(
+                            primary: MyColors.blueLighter,
+                            padding: EdgeInsets.all(15)),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              MySpaces.vLargeGapInBetween,
-              MyFonts().heading1(qrScanRes, MyColors.black)
-            ],
+                  ],
+                ),
+                MySpaces.vLargeGapInBetween,
+                MyFonts().heading1(qrScanRes, MyColors.black)
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      ));
+    });
   }
 }

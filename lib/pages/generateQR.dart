@@ -110,7 +110,7 @@ class _QRGeneratorState extends State<QRGenerator> {
                 ),
               ),
               MyFonts().body(
-                name + "\n" + degree + "\n" + rollNumber, MyColors.black),
+                  name + "\n" + degree + "\n" + rollNumber, MyColors.black),
             ],
           ),
         ),
