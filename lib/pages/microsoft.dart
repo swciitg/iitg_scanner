@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iitg_idcard_scanner/globals/myColors.dart';
+import 'package:iitg_idcard_scanner/globals/mySpaces.dart';
 import 'package:provider/provider.dart';
 import 'package:iitg_idcard_scanner/stores/login_store.dart';
+import 'package:iitg_idcard_scanner/pages/otp_page.dart';
+import 'package:iitg_idcard_scanner/stores/otp_login_store.dart';
+import 'package:iitg_idcard_scanner/pages/login_page.dart';
 
 class MicrosoftLogin extends StatefulWidget {
   static String id = 'google-login';
@@ -10,7 +15,6 @@ class MicrosoftLogin extends StatefulWidget {
 }
 
 class _MicrosoftLoginState extends State<MicrosoftLogin> {
-  
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginStore>(
@@ -24,30 +28,31 @@ class _MicrosoftLoginState extends State<MicrosoftLogin> {
               children: [
                 Center(
                   child: Text(
-                    'Sign In!',
+                    'Log In',
                     style: GoogleFonts.poppins(
-                        color: Colors.blueAccent,
+                        color: Colors.indigo,
                         fontSize: 60,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                Spacer(),
+                Container(
+                  height: 50,
+                ),
                 Image(
                   image: AssetImage("assets/icons/iitg.png"),
+                  height: 300,
                 ),
-                Spacer(),
-                Spacer(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
+                MySpaces.vMediumGapInBetween,
+                Expanded(
+                  child: Column(
+                    children: [
+                      TextButton(
                         onPressed: () {
                           loginStore.signInWithMicrosoft(context);
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.white70,
-                            padding: EdgeInsets.all(25),
-                            elevation: 5),
+                            primary: MyColors.blueLighter,
+                            padding: EdgeInsets.all(25)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -63,17 +68,46 @@ class _MicrosoftLoginState extends State<MicrosoftLogin> {
                             Text(
                               'Login with Microsoft',
                               style: GoogleFonts.rubik(
-                                  color: Colors.black87,
+                                  color: MyColors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      MySpaces.vMediumGapInBetween,
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('login_page');
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: MyColors.blueLighter,
+                            padding: EdgeInsets.all(25)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              image: NetworkImage(
+                                  'https://image.flaticon.com/icons/png/512/732/732221.png'),
+                              height: 25,
+                              width: 25,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              'Login with OTP',
+                              style: GoogleFonts.rubik(
+                                  color: MyColors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                Spacer(),
               ],
             ),
           ),

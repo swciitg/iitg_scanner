@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iitg_idcard_scanner/pages/generateQR.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
+import 'package:iitg_idcard_scanner/pages/login_page.dart';
 import 'package:iitg_idcard_scanner/pages/microsoft.dart';
+import 'package:iitg_idcard_scanner/pages/otp_page.dart';
 import 'package:iitg_idcard_scanner/pages/scanQR.dart';
 import 'package:iitg_idcard_scanner/pages/showScanDetails.dart';
 import 'package:iitg_idcard_scanner/pages/splash.dart';
@@ -10,6 +12,7 @@ import 'package:iitg_idcard_scanner/pages/studentsList.dart';
 import 'package:iitg_idcard_scanner/pages/validateElections/approved.dart';
 import 'package:iitg_idcard_scanner/pages/validateElections/rejected.dart';
 import 'package:iitg_idcard_scanner/stores/login_store.dart';
+import 'package:iitg_idcard_scanner/stores/otp_login_store.dart';
 import 'package:provider/provider.dart';
 
 import 'globals/myColors.dart';
@@ -45,6 +48,9 @@ class _MyAppState extends State<MyApp> {
               Provider<LoginStore>(
                 create: (_) => LoginStore(),
               ),
+              Provider<otpLoginStore>(
+                create: (_) => otpLoginStore(),
+              )
             ],
             child: MaterialApp(
               supportedLocales: [
@@ -64,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                 ShowScanDetails.id: (context) => ShowScanDetails(),
                 Approved.id: (context) => Approved(),
                 Rejected.id: (context) => Rejected(),
+                LoginPage.id: (context) => LoginPage(),
               },
             ),
           );

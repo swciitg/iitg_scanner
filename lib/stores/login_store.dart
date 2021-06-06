@@ -2,6 +2,7 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:iitg_idcard_scanner/pages/generateQR.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,6 @@ import 'dart:io';
 import 'package:iitg_idcard_scanner/pages/microsoft.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
 part 'login_store.g.dart';
-
-
 
 class LoginStore = LoginStoreBase with _$LoginStore;
 
@@ -68,12 +67,12 @@ abstract class LoginStoreBase with Store {
 
       await _auth
           .createUserWithEmailAndPassword(
-          email: data['mail'], password: '123456')
+              email: data['mail'], password: '123456')
           .then((UserCredential value) => {
-        // send home
-        print('Authentication successful'),
-        onAuthenticationSuccessful(context, value, data),
-      })
+                // send home
+                print('Authentication successful'),
+                onAuthenticationSuccessful(context, value, data),
+              })
           .catchError((_) {
         _auth
             .signInWithEmailAndPassword(email: data['mail'], password: '123456')
@@ -98,7 +97,7 @@ abstract class LoginStoreBase with Store {
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => HomeManagement()),
-            (Route<dynamic> route) => false);
+        (Route<dynamic> route) => false);
   }
 
   @action
@@ -107,7 +106,7 @@ abstract class LoginStoreBase with Store {
       oauth.logout();
       await Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => MicrosoftLogin()),
-              (Route<dynamic> route) => false);
+          (Route<dynamic> route) => false);
       firebaseUser = null;
       userData = null;
     });

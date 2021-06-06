@@ -71,6 +71,9 @@ class _QRGeneratorState extends State<QRGenerator> {
         });
     return Consumer<LoginStore>(builder: (_, loginStore, __) {
       User currentUser = loginStore.firebaseUser;
+      print(loginStore.userData);
+      String userId = currentUser.uid;
+      String email = currentUser.email;
       String name = loginStore.userData['displayName'];
       String degree = loginStore.userData['jobTitle'];
       String rollNumber = loginStore.userData['rollNumber'];
@@ -82,7 +85,8 @@ class _QRGeneratorState extends State<QRGenerator> {
           now.hour.toString() +
           now.minute.toString() +
           now.second.toString();
-      qrData = rollNumber + "," + date;
+      qrData = rollNumber + "," + date + "," + email + "," + userId;
+      print(qrData);
       return SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -105,12 +109,8 @@ class _QRGeneratorState extends State<QRGenerator> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.all(30),
-              //   child: Text(qrData),
-              // ),
               MyFonts().body(
-                  name + "\n" + degree + "\n" + rollNumber, MyColors.black)
+                name + "\n" + degree + "\n" + rollNumber, MyColors.black),
             ],
           ),
         ),
