@@ -87,8 +87,7 @@ class _MicrosoftLoginState extends State<MicrosoftLogin> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image(
-                              image: NetworkImage(
-                                  'https://image.flaticon.com/icons/png/512/732/732221.png'),
+                              image: AssetImage('assets/icons/otp.png'),
                               height: 25,
                               width: 25,
                             ),
