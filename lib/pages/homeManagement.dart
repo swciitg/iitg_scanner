@@ -2,8 +2,11 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iitg_idcard_scanner/globals/myColors.dart';
 import 'package:iitg_idcard_scanner/globals/myFonts.dart';
-import 'package:iitg_idcard_scanner/pages/studentsList.dart';
-import 'package:iitg_idcard_scanner/pages/scanNow.dart';
+import 'package:iitg_idcard_scanner/globals/mySpaces.dart';
+import 'package:iitg_idcard_scanner/pages/generateQR.dart';
+import 'package:iitg_idcard_scanner/pages/scanQR.dart';
+import 'package:iitg_idcard_scanner/stores/login_store.dart';
+import 'package:provider/provider.dart';
 
 class HomeManagement extends StatefulWidget {
   static String id = 'home-management';
@@ -14,35 +17,64 @@ class HomeManagement extends StatefulWidget {
 
 class _HomeManagementState extends State<HomeManagement> {
   int _selectedIndex = 0;
-
+  static const IconData logout = IconData(0xe3b3, fontFamily: 'MaterialIcons');
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      ScanNow(),
-      StudentsList(),
+      QRGenerator(),
     ];
-    return Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: MyColors.blueLighter,
-        unselectedItemColor: MyColors.gray,
-        selectedLabelStyle: TextStyle(fontFamily: 'poppins-semi'),
-        unselectedLabelStyle: TextStyle(fontFamily: 'raleway'),
-        iconSize: 30,
-        backgroundColor: MyColors.white,
-        currentIndex: _selectedIndex,
-        onTap: (index) async {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner), label: 'Scan Now'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt), label: "Student's List"),
-        ],
-      ),
-    );
+    return Consumer<LoginStore>(builder: (_, loginStore, __) {
+      return SafeArea(
+        child: Scaffold(
+            body: pages[_selectedIndex],
+            bottomNavigationBar: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text("Generate now"),
+                        Icon(
+                          Icons.create,
+                          size: 30,
+                        )
+                      ],
+                    ),
+                  ),
+                  MySpaces.hMediumGapInBetween,
+                  SafeArea(
+                    child: TextButton(
+                        onPressed: () {
+                          loginStore.signOut(context);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              "Log Out    ",
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red),
+                            ),
+                            Icon(
+                              logout,
+                              size: 30,
+                              color: Colors.red,
+                            )
+                          ],
+                        )),
+                  )
+                ],
+              ),
+            )),
+      );
+    });
   }
 }

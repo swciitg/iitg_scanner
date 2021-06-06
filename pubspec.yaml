@@ -35,7 +35,15 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   bottom_navy_bar: ^5.6.0
   flutter_barcode_scanner: ^1.0.2
-  gsheets_get: 
+  gsheets_get:
+  provider: ^4.3.3
+  aad_oauth: ^0.2.1
+  mobx: ^1.2.1+4
+  google_fonts: ^1.1.2
+  qr_flutter: ^4.0.0
+  intl: 
+  numeric_keyboard: ^1.1.0
+  flutter_mobx: ^1.1.0+2
 
 dev_dependencies:
   flutter_test:

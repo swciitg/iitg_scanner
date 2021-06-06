@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:iitg_idcard_scanner/globals/myColors.dart';
 import 'package:iitg_idcard_scanner/globals/myFonts.dart';
 import 'package:iitg_idcard_scanner/globals/mySpaces.dart';
+import 'package:iitg_idcard_scanner/pages/generateQR.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
+import 'package:iitg_idcard_scanner/pages/scanQR.dart';
+import 'package:iitg_idcard_scanner/stores/otp_login_store.dart';
+import 'package:provider/provider.dart';
+import 'package:iitg_idcard_scanner/stores/login_store.dart';
+import 'package:iitg_idcard_scanner/pages/microsoft.dart';
 
 class Splash extends StatefulWidget {
   static String id = 'splash';
@@ -19,7 +25,33 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    _loadWidget();
+    //check if the user is already signed in
+    Provider.of<LoginStore>(context, listen: false)
+        .isAlreadyAuthenticated()
+        .then((result) {
+      if (result) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => HomeManagement()),
+            (Route<dynamic> route) => false);
+      } else {
+        //if not signed-in, redirect to login screen
+        Provider.of<otpLoginStore>(context, listen: false)
+            .isAlreadyAuthenticated()
+            .then((result2) {
+          if (result2) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => ScanQR()),
+                (Route<dynamic> route) => false);
+          } else {
+            print("WORKS");
+            //if not signed-in, redirect to login screen
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+                (Route<dynamic> route) => false);
+          }
+        });
+      }
+    });
   }
 
   _loadWidget() async {
