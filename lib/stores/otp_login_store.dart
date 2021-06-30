@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iitg_idcard_scanner/pages/login_page.dart';
 import 'package:iitg_idcard_scanner/pages/scanQR.dart';
 import 'package:mobx/mobx.dart';
@@ -15,7 +16,7 @@ class otpLoginStore = LoginStoreBase with _$LoginStore;
 abstract class LoginStoreBase with Store {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String actualCode;
-
+  String enteredContact;
   @observable
   bool isLoginLoading = false;
   @observable
@@ -44,11 +45,28 @@ abstract class LoginStoreBase with Store {
   Future<void> getCodeWithPhoneNumber(
       BuildContext context, String phoneNumber) async {
     isLoginLoading = true;
-
+    enteredContact = phoneNumber;
     await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (AuthCredential auth) async {
+          //add phone number check
+          bool response = await checkPhoneFirebase(enteredContact);
+          if(response==false)
+          {
+            print('\n\n\nNOT FOUND\n\n\n');
+            loginScaffoldKey.currentState.showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.red,
+              content: Text(
+                'This number does not exist in the database of mess managers.',
+                style: TextStyle(color: Colors.white),
+              ),
+            ));
+
+            Navigator.pop(context);
+            //Navigator.pushNamed(context, LoginPage.id);
+          }
           await _auth.signInWithCredential(auth).then((UserCredential value) {
             if (value != null && value.user != null) {
               print('Authentication successful');
@@ -102,7 +120,23 @@ abstract class LoginStoreBase with Store {
     isOtpLoading = true;
     final AuthCredential _authCredential = PhoneAuthProvider.credential(
         verificationId: actualCode, smsCode: smsCode);
+    bool response = await checkPhoneFirebase(enteredContact);
+    if(response==false)
+      {
+        print('\n\n\nNOT FOUND\n\n\n');
+        loginScaffoldKey.currentState.showSnackBar(SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+          content: Text(
+            'This number does not exist in the database of mess managers.',
+            style: TextStyle(color: Colors.white),
+          ),
+        ));
 
+        Navigator.pop(context);
+        //Navigator.pushNamed(context, LoginPage.id);
+      }
+    //verify phone number
     await _auth.signInWithCredential(_authCredential).catchError((error) {
       isOtpLoading = false;
       otpScaffoldKey.currentState.showSnackBar(SnackBar(

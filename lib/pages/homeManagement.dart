@@ -28,7 +28,7 @@ class _HomeManagementState extends State<HomeManagement> {
       return SafeArea(
         child: Scaffold(
             body: pages[_selectedIndex],
-            bottomNavigationBar: Container(
+           /* bottomNavigationBar: Container(
               width: MediaQuery.of(context).size.width,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -91,7 +91,8 @@ class _HomeManagementState extends State<HomeManagement> {
                   ],
                 ),
               ),
-            )),
+            )*/
+        ),
       );
     });
   }

@@ -23,7 +23,7 @@ Future<bool> checkRollMess(String roll, String email) async {
 
   print(allowedRollList);
   print(allowedEmailList);
-
+  //allowedRollList[allowedEmailList.indexOf(email)];
   if (allowedRollList.contains(roll)) return true;
   if (allowedEmailList.contains(email)) return true;
   return false;

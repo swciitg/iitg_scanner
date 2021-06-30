@@ -15,15 +15,23 @@ class MicrosoftLogin extends StatefulWidget {
 }
 
 class _MicrosoftLoginState extends State<MicrosoftLogin> {
+  bool loading;
+  @override
+  void initState() {
+    loading = false;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<LoginStore>(
       builder: (_, loginStore, __) {
         return Scaffold(
           backgroundColor: Color(0xFFF8F8F8),
-          body: SingleChildScrollView(
+          body: (loading)?Center(
+            child: CircularProgressIndicator(),
+          ):SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height,
+         //     height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               child: Column(
@@ -44,74 +52,72 @@ class _MicrosoftLoginState extends State<MicrosoftLogin> {
                   Image(
                     image: AssetImage("assets/icons/iitg.png"),
                     height: 300,
+                    width: MediaQuery.of(context).size.width-40>300?300:MediaQuery.of(context).size.width,
                   ),
                   MySpaces.vMediumGapInBetween,
-                  Expanded(
-                    child: Column(
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        loading = true;
+                      });
+                      loginStore.signInWithMicrosoft(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: MyColors.white,
+                      padding: EdgeInsets.all(25),
+                      elevation: 2.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextButton(
-                          onPressed: () {
-                            loginStore.signInWithMicrosoft(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: MyColors.white,
-                            padding: EdgeInsets.all(25),
-                            elevation: 2.0,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image(
-                                image: NetworkImage(
-                                    'https://image.flaticon.com/icons/png/512/732/732221.png'),
-                                height: 25,
-                                width: 25,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'Login as Student',
-                                style: GoogleFonts.rubik(
-                                    color: Colors.indigo,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                        Image(
+                          image: NetworkImage(
+                              'https://image.flaticon.com/icons/png/512/732/732221.png'),
+                          height: 25,
+                          width: 25,
                         ),
-                        MySpaces.vMediumGapInBetween,
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('login_page');
-                          },
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.indigo[500],
-                              padding: EdgeInsets.all(25)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image(
-                                image: AssetImage('assets/icons/otp.png'),
-                                height: 25,
-                                width: 25,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                'Login as Mess Manager',
-                                style: GoogleFonts.rubik(
-                                    color: MyColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        )
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          'Login as Student',
+                          style: GoogleFonts.rubik(
+                              color: Colors.indigo,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
                   ),
+                  MySpaces.vMediumGapInBetween,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('login_page');
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.indigo[500],
+                        padding: EdgeInsets.all(25)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: AssetImage('assets/icons/otp.png'),
+                          height: 25,
+                          width: 25,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          'Login as Mess Manager',
+                          style: GoogleFonts.rubik(
+                              color: MyColors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

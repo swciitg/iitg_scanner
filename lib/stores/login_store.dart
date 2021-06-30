@@ -2,7 +2,10 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iitg_idcard_scanner/functions/checkRollMess.dart';
 import 'package:iitg_idcard_scanner/pages/generateQR.dart';
+import 'package:iitg_idcard_scanner/pages/login_page.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -33,6 +36,8 @@ abstract class LoginStoreBase with Store {
   Future<bool> isAlreadyAuthenticated() async {
     firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
+      if(firebaseUser.phoneNumber!=null)
+        return false;
       final prefs = await SharedPreferences.getInstance();
       print("Got Here");
       userData = {};
@@ -59,9 +64,18 @@ abstract class LoginStoreBase with Store {
     if (accessToken != null) {
       var response = await http.get('https://graph.microsoft.com/v1.0/me',
           headers: {HttpHeaders.authorizationHeader: accessToken});
+      print(response.statusCode);
+      if(response.statusCode!=200){
+        Fluttertoast.showToast(msg: "Something went wrong!");
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+                (Route<dynamic> route) => false);
+        return;
+      }
       var data = jsonDecode(response.body);
       print(data);
       print("data was printed");
+      //check and compare mail and roll number in google sheet and assign hostel to shared prefs
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('displayName', data['displayName']);
       prefs.setString('jobTitle', data['jobTitle']);
@@ -77,12 +91,17 @@ abstract class LoginStoreBase with Store {
                 print('Authentication successful'),
                 onAuthenticationSuccessful(context, value, data),
               })
-          .catchError((_) {
+          .catchError((err) {
+            print(err);
         _auth
             .signInWithEmailAndPassword(email: data['mail'], password: '123456')
             .then((UserCredential value) {
           print('Authentication successful');
           onAuthenticationSuccessful(context, value, data);
+        }).catchError((err){
+          print(err);
+          Fluttertoast.showToast(msg: "Could not authenticate please try later");
+          //show an error toast
         });
       });
     } else
