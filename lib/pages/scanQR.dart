@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iitg_idcard_scanner/functions/checkRoll.dart';
 import 'package:iitg_idcard_scanner/functions/checkRollElections.dart';
 import 'package:iitg_idcard_scanner/functions/checkRollMess.dart';
@@ -75,22 +76,23 @@ class _ScanQRState extends State<ScanQR> {
     return Consumer<otpLoginStore>(builder: (_, otpStore, __) {
       return SafeArea(
           child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () {
-                  otpStore.signOut(context);
-                })
-          ],
-        ),
+        // appBar: AppBar(
+        //   actions: [
+        //     IconButton(
+        //         icon: Icon(Icons.exit_to_app),
+        //         onPressed: () {
+        //           otpStore.signOut(context);
+        //         })
+        //   ],
+        // ),
         backgroundColor: MyColors.backgroundColor,
         body: Container(
-          padding: EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                MyFonts().title1('Scan QR Code', MyColors.blueLighter),
+                MyFonts().title1('Scan QR Code', Colors.indigoAccent),
                 MySpaces.vGapInBetween,
                 Center(
                   child: Card(
@@ -109,65 +111,164 @@ class _ScanQRState extends State<ScanQR> {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          String _qrScanResult = await scanQRNormal();
-                          setState(() {
-                            qrScanRes = _qrScanResult;
-                          });
-                          String rollNumber = qrScanRes.split(",")[0];
-                          //Here the string received from the QRCode is in
-                          //the format :
-                          // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
-                          //Note that the date string is formatted with a T separator
-                          //between the date and time
-                          String datewithT = qrScanRes.split(",")[1];
-                          String email = qrScanRes.split(",")[2];
-                          String userId = qrScanRes.split(",")[3];
-                          DateTime timeScanned = DateTime.parse(datewithT);
-                          Duration difference =
-                              DateTime.now().difference(timeScanned);
-                          int minutes = difference.inMinutes;
-
-                          if (minutes > maxMinutes || !checkRoll(rollNumber)) {
-                            final badReadSnackBar = SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: MyColors.black,
-                                content: MyFonts().body(
-                                    'Bad read! Please try again or re-generate the QR Code.',
-                                    MyColors.white));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(badReadSnackBar);
-                          } else {
-                            // Send to a Loader Widget temporarily
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    loadingDialog(context));
-
-                            if (await checkRollMess(rollNumber, email)) {
-                              _firestore.collection('entries').add({
-                                "email": email,
-                                "time": timeScanned.toString(),
-                                "hostel": "subansiri"
+                      child: Column(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              String _qrScanResult = await scanQRNormal();
+                              setState(() {
+                                qrScanRes = _qrScanResult;
                               });
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Approved(
-                                            rollNumber: rollNumber,
-                                          )));
-                            } else
-                              Navigator.pushNamed(context, Rejected.id);
-                          }
-                        },
-                        child: MyFonts().heading1('Scan Now', MyColors.white),
-                        style: ElevatedButton.styleFrom(
-                            primary: MyColors.blueLighter,
-                            padding: EdgeInsets.all(15)),
+
+                              String rollNumber = qrScanRes?.split(",")[0];
+                              //Here the string received from the QRCode is in
+                              //the format :
+                              // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
+                              //Note that the date string is formatted with a T separator
+                              //between the date and time
+                              String datewithT = qrScanRes?.split(",")[1];
+                              String email = qrScanRes?.split(",")[2];
+                              String userId = qrScanRes?.split(",")[3];
+                              DateTime timeScanned = DateTime.parse(datewithT);
+                              Duration difference =
+                                  DateTime.now().difference(timeScanned);
+                              int minutes = difference.inMinutes;
+
+                              if (minutes > maxMinutes ||
+                                  !checkRoll(rollNumber)) {
+                                final badReadSnackBar = SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: MyColors.black,
+                                    content: MyFonts().body(
+                                        'Bad read! Please try again or re-generate the QR Code.',
+                                        MyColors.white));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(badReadSnackBar);
+                              } else {
+                                // Send to a Loader Widget temporarily
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        loadingDialog(context));
+
+                                if (await checkRollMess(rollNumber, email)) {
+                                  _firestore.collection('entries').add({
+                                    "email": email,
+                                    "time": timeScanned.toString(),
+                                    "hostel": "subansiri"
+                                  });
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              Approved(
+                                                rollNumber: rollNumber,
+                                              )));
+                                } else
+                                  Navigator.pushNamed(context, Rejected.id);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.indigo,
+                              padding: EdgeInsets.all(25),
+                              elevation: 2.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Scan Now',
+                                  style: GoogleFonts.rubik(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                          MySpaces.vMediumGapInBetween,
+                          TextButton(
+                            onPressed: () {
+                              otpStore.signOut(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.redAccent,
+                                padding: EdgeInsets.all(25)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Logout',
+                                  style: GoogleFonts.rubik(
+                                      color: MyColors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
+                      // ElevatedButton(
+                      //   onPressed: () async {
+                      //     String _qrScanResult = await scanQRNormal();
+                      //     setState(() {
+                      //       qrScanRes = _qrScanResult;
+                      //     });
+                      //     String rollNumber = qrScanRes.split(",")[0];
+                      //     //Here the string received from the QRCode is in
+                      //     //the format :
+                      //     // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
+                      //     //Note that the date string is formatted with a T separator
+                      //     //between the date and time
+                      //     String datewithT = qrScanRes.split(",")[1];
+                      //     String email = qrScanRes.split(",")[2];
+                      //     String userId = qrScanRes.split(",")[3];
+                      //     DateTime timeScanned = DateTime.parse(datewithT);
+                      //     Duration difference =
+                      //         DateTime.now().difference(timeScanned);
+                      //     int minutes = difference.inMinutes;
+
+                      //     if (minutes > maxMinutes || !checkRoll(rollNumber)) {
+                      //       final badReadSnackBar = SnackBar(
+                      //           behavior: SnackBarBehavior.floating,
+                      //           backgroundColor: MyColors.black,
+                      //           content: MyFonts().body(
+                      //               'Bad read! Please try again or re-generate the QR Code.',
+                      //               MyColors.white));
+                      //       ScaffoldMessenger.of(context)
+                      //           .showSnackBar(badReadSnackBar);
+                      //     } else {
+                      //       // Send to a Loader Widget temporarily
+                      //       showDialog(
+                      //           context: context,
+                      //           builder: (BuildContext context) =>
+                      //               loadingDialog(context));
+
+                      //       if (await checkRollMess(rollNumber, email)) {
+                      //         _firestore.collection('entries').add({
+                      //           "email": email,
+                      //           "time": timeScanned.toString(),
+                      //           "hostel": "subansiri"
+                      //         });
+                      //         Navigator.pop(context);
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (BuildContext context) =>
+                      //                     Approved(
+                      //                       rollNumber: rollNumber,
+                      //                     )));
+                      //       } else
+                      //         Navigator.pushNamed(context, Rejected.id);
+                      //     }
+                      //   },
+                      //   child: MyFonts().heading1('Scan Now', MyColors.white),
+                      //   style: ElevatedButton.styleFrom(
+                      //       primary: MyColors.blueLighter,
+                      //       padding: EdgeInsets.all(15)),
+                      // ),
                     ),
                   ],
                 ),

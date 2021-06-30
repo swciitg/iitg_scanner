@@ -56,7 +56,7 @@ class _QRGeneratorState extends State<QRGenerator> {
               version: QrVersions.auto,
               eyeStyle: const QrEyeStyle(
                 eyeShape: QrEyeShape.square,
-                color: MyColors.blueLighter,
+                color: Colors.indigoAccent,
               ),
               dataModuleStyle: const QrDataModuleStyle(
                 dataModuleShape: QrDataModuleShape.circle,
@@ -89,29 +89,24 @@ class _QRGeneratorState extends State<QRGenerator> {
       print(qrData);
       return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  onPressed: () {
-                    loginStore.signOut(context);
-                  })
-            ],
-          ),
           backgroundColor: MyColors.backgroundColor,
-          body: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: 280,
-                    child: qrFutureBuilder,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      width: 280,
+                      child: qrFutureBuilder,
+                    ),
                   ),
                 ),
-              ),
-              MyFonts().body(
-                  name + "\n" + degree + "\n" + rollNumber, MyColors.black),
-            ],
+                MyFonts().body(
+                    name + "\n" + degree + "\n" + rollNumber, MyColors.black),
+                MySpaces.vMediumGapInBetween,
+              ],
+            ),
           ),
         ),
       );

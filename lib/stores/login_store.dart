@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:iitg_idcard_scanner/pages/microsoft.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'login_store.g.dart';
 
 class LoginStore = LoginStoreBase with _$LoginStore;
@@ -32,15 +33,13 @@ abstract class LoginStoreBase with Store {
   Future<bool> isAlreadyAuthenticated() async {
     firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
-      String accessToken = await oauth.getAccessToken();
-      var response = await http.get('https://graph.microsoft.com/v1.0/me',
-          headers: {HttpHeaders.authorizationHeader: accessToken});
-      var data = jsonDecode(response.body);
+      final prefs = await SharedPreferences.getInstance();
+      print("Got Here");
       userData = {};
       userData.addAll({
-        'displayName': data['displayName'],
-        'jobTitle': data['jobTitle'],
-        'rollNumber': data['surname'],
+        'displayName': prefs.getString('displayName') ?? '0',
+        'jobTitle': prefs.getString('jobTitle') ?? '0',
+        'rollNumber': prefs.getString('rollNumber') ?? '0',
       });
       return true;
     } else {
@@ -62,7 +61,12 @@ abstract class LoginStoreBase with Store {
           headers: {HttpHeaders.authorizationHeader: accessToken});
       var data = jsonDecode(response.body);
       print(data);
-
+      print("data was printed");
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('displayName', data['displayName']);
+      prefs.setString('jobTitle', data['jobTitle']);
+      prefs.setString('rollNumber', data['surname']);
+      print("\n\n\n\nSetting data complete\n\n\n\n");
       final _auth = FirebaseAuth.instance;
 
       await _auth
@@ -88,11 +92,12 @@ abstract class LoginStoreBase with Store {
   Future<void> onAuthenticationSuccessful(
       BuildContext context, UserCredential result, var data) async {
     firebaseUser = result.user;
+    final prefs = await SharedPreferences.getInstance();
     userData = {};
     userData.addAll({
-      'displayName': data['displayName'],
-      'jobTitle': data['jobTitle'],
-      'rollNumber': data['surname'],
+      'displayName': prefs.getString('displayName') ?? '0',
+      'jobTitle': prefs.getString('jobTitle') ?? '0',
+      'rollNumber': prefs.getString('rollNumber') ?? '0',
     });
 
     Navigator.of(context).pushAndRemoveUntil(
@@ -102,6 +107,8 @@ abstract class LoginStoreBase with Store {
 
   @action
   Future<void> signOut(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
     await _auth.signOut().then((value) async {
       oauth.logout();
       await Navigator.of(context).pushAndRemoveUntil(
