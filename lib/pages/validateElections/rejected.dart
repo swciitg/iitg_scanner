@@ -19,7 +19,7 @@ class _RejectedState extends State<Rejected> {
   @override
   void initState() {
     super.initState();
-    _loadWidget();
+  //  _loadWidget();
   }
 
   _loadWidget() async {

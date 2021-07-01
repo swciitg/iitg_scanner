@@ -81,13 +81,16 @@ class _QRGeneratorState extends State<QRGenerator> {
       DateTime now = DateTime.now();
       String month = now.month.toString().length==1?"0"+now.month.toString():now.month.toString();
       String day = now.day.toString().length==1?"0"+now.day.toString():now.day.toString();
+      String second = now.second.toString().length==1?"0"+now.second.toString():now.second.toString();
+      String hour = now.hour.toString().length==1?"0"+now.hour.toString():now.hour.toString();
+      String minute = now.minute.toString().length==1?"0"+now.minute.toString():now.minute.toString();
       String date = now.year.toString() +
           month +
           day +
           "T" +
-          now.hour.toString() +
-          now.minute.toString() +
-          now.second.toString();
+          hour +
+          minute +
+          second;
       qrData = rollNumber + "," + date + "," + email + "," + userId;
       print(qrData);
       return SafeArea(
@@ -112,9 +115,14 @@ class _QRGeneratorState extends State<QRGenerator> {
                         Expanded(
                           child: SizedBox(),
                         ),
-                        Text(name,style: GoogleFonts.rubik(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500),),
+                        Container(
+                          child: Text(name,style: GoogleFonts.rubik(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,),),
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width-130
+                          ),
+                        )
                       ],
                     ),
                   ),

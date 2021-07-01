@@ -37,7 +37,7 @@ abstract class LoginStoreBase with Store {
   Future<bool> isAlreadyAuthenticated() async {
     firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
-      if (firebaseUser.phoneNumber != null) return false;
+      if (firebaseUser.phoneNumber != null && firebaseUser.phoneNumber != "") return false;
       final prefs = await SharedPreferences.getInstance();
       print("Got Here");
       userData = {};
@@ -59,7 +59,14 @@ abstract class LoginStoreBase with Store {
         25,
         MediaQuery.of(context).size.width,
         MediaQuery.of(context).size.height - 25));
-    await oauth.login();
+    try{
+      await oauth.login();
+    }catch(exception){
+      Fluttertoast.showToast(msg: "Something went wrong!");
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+              (Route<dynamic> route) => false);
+    }
     String accessToken = await oauth.getAccessToken();
     if (accessToken != null) {
       var response = await http.get('https://graph.microsoft.com/v1.0/me',

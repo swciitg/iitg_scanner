@@ -63,9 +63,10 @@ abstract class LoginStoreBase with Store {
                 style: TextStyle(color: Colors.white),
               ),
             ));
-
+            isLoginLoading = false;
+            isOtpLoading = false;
             Navigator.pop(context);
-            //Navigator.pushNamed(context, LoginPage.id);
+            Navigator.pushNamed(context, LoginPage.id);
           }
           await _auth.signInWithCredential(auth).then((UserCredential value) {
             if (value != null && value.user != null) {
@@ -121,6 +122,7 @@ abstract class LoginStoreBase with Store {
     final AuthCredential _authCredential = PhoneAuthProvider.credential(
         verificationId: actualCode, smsCode: smsCode);
     bool response = await checkPhoneFirebase(enteredContact);
+    print(response.toString()+"Karan");
     if(response==false)
       {
         print('\n\n\nNOT FOUND\n\n\n');
@@ -132,9 +134,10 @@ abstract class LoginStoreBase with Store {
             style: TextStyle(color: Colors.white),
           ),
         ));
-
+        isLoginLoading = false;
+        isOtpLoading = false;
         Navigator.pop(context);
-        //Navigator.pushNamed(context, LoginPage.id);
+        Navigator.pushNamed(context, LoginPage.id);
       }
     //verify phone number
     await _auth.signInWithCredential(_authCredential).catchError((error) {
@@ -179,7 +182,8 @@ abstract class LoginStoreBase with Store {
           style: TextStyle(color: Colors.white),
         ),
       ));
-
+      isLoginLoading = false;
+      isOtpLoading = false;
       Navigator.pop(context);
       Navigator.pushNamed(context, LoginPage.id);
     }
@@ -190,16 +194,12 @@ abstract class LoginStoreBase with Store {
 
   Future<bool> checkPhoneFirebase(String phoneNumber) async {
     print('\n\n\nCheckiing in data');
-    await for (var snapshot
-        in _firestore.collection('mess_manager').snapshots()) {
-      print(snapshot.docs);
-      for (var doc in snapshot.docs) {
-        if (phoneNumber == doc.data()['phone']) {
-          print(doc.data());
+    QuerySnapshot querySnapshot = await _firestore.collection('mess_manager').get();
+    for(QueryDocumentSnapshot doc in querySnapshot.docs)
+      {
+        if(phoneNumber==doc.get('phone').toString())
           return true;
-        }
       }
-    }
     return false;
   }
 

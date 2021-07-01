@@ -133,65 +133,89 @@ class _ScanQRState extends State<ScanQR> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Email-id: ",
-                        style: GoogleFonts.rubik(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                      Text(
-                        email,
-                        style: GoogleFonts.rubik(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Email-id: ",
+                          style: GoogleFonts.rubik(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Container(
+                          child: Text(
+                            email,
+                            style: GoogleFonts.rubik(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width-150
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  width: MediaQuery.of(context).size.width,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Roll Number: ",
-                        style: GoogleFonts.rubik(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                      Text(
-                        rollNumber,
-                        style: GoogleFonts.rubik(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                Container(
+                  child:  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Roll Number: ",
+                          style: GoogleFonts.rubik(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Container(
+                          child: Text(
+                            rollNumber,
+                            style: GoogleFonts.rubik(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width-150
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  width: MediaQuery.of(context).size.width,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Hostel: ",
-                        style: GoogleFonts.rubik(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                      Text(
-                        hostel,
-                        style: GoogleFonts.rubik(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Hostel: ",
+                          style: GoogleFonts.rubik(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Container(
+                          child: Text(
+                            hostel,
+                            style: GoogleFonts.rubik(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width-150
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  width: MediaQuery.of(context).size.width,
                 ),
                 SizedBox(
                   height: 30,
@@ -362,7 +386,7 @@ class _ScanQRState extends State<ScanQR> {
                   ],
                 ),
                 MySpaces.vLargeGapInBetween,
-                MyFonts().heading1(qrScanRes, MyColors.black)
+               // MyFonts().heading1(qrScanRes, MyColors.black)
               ],
             ),
           ),
