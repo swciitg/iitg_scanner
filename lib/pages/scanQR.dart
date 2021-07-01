@@ -39,6 +39,9 @@ Widget loadingDialog(BuildContext context) {
 
 class _ScanQRState extends State<ScanQR> {
   String qrScanRes = "";
+  String rollNumber = "";
+  String email = "";
+  String hostel = "subansiri";
 
   Future<String> scanQRNormal() async {
     try {
@@ -91,6 +94,7 @@ class _ScanQRState extends State<ScanQR> {
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 MyFonts().title1('Scan QR Code', Colors.indigoAccent),
                 MySpaces.vGapInBetween,
@@ -101,13 +105,97 @@ class _ScanQRState extends State<ScanQR> {
                       padding: const EdgeInsets.all(10),
                       child: Image(
                         image: AssetImage('assets/icons/qr-scan.png'),
-                        width: 250,
-                        height: 360,
+                        width: 125,
+                        height: 180,
                       ),
                     ),
                   ),
                 ),
-                MySpaces.vLargeGapInBetween,
+                MySpaces.vMediumGapInBetween,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "PREVIOUS SCAN DETAILS:",
+                        style: GoogleFonts.rubik(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      // Expanded(
+                      //   child: SizedBox(),
+                      // ),
+                      // Text(
+                      //   email,
+                      //   style: GoogleFonts.rubik(
+                      //       fontSize: 20, fontWeight: FontWeight.w500),
+                      // ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Email-id: ",
+                        style: GoogleFonts.rubik(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Text(
+                        email,
+                        style: GoogleFonts.rubik(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Roll Number: ",
+                        style: GoogleFonts.rubik(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Text(
+                        rollNumber,
+                        style: GoogleFonts.rubik(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Hostel: ",
+                        style: GoogleFonts.rubik(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Text(
+                        hostel,
+                        style: GoogleFonts.rubik(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -120,14 +208,14 @@ class _ScanQRState extends State<ScanQR> {
                                 qrScanRes = _qrScanResult;
                               });
 
-                              String rollNumber = qrScanRes?.split(",")[0];
+                              rollNumber = qrScanRes?.split(",")[0];
                               //Here the string received from the QRCode is in
                               //the format :
                               // '200101038,20210531T010455,d.gunjan@iitg.ac.in,cwJIBDg5s3UGmWmY1i8LAfLYoin1'
                               //Note that the date string is formatted with a T separator
                               //between the date and time
                               String datewithT = qrScanRes?.split(",")[1];
-                              String email = qrScanRes?.split(",")[2];
+                              email = qrScanRes?.split(",")[2];
                               String userId = qrScanRes?.split(",")[3];
                               DateTime timeScanned = DateTime.parse(datewithT);
                               Duration difference =
@@ -150,8 +238,9 @@ class _ScanQRState extends State<ScanQR> {
                                     context: context,
                                     builder: (BuildContext context) =>
                                         loadingDialog(context));
-
-                                if (await checkRollMess(rollNumber, email)) {
+                                Map checkedResult =
+                                    await checkRollMess(rollNumber, email);
+                                if (checkedResult['isPresent']) {
                                   _firestore.collection('entries').add({
                                     "email": email,
                                     "time": timeScanned.toString(),
@@ -171,7 +260,7 @@ class _ScanQRState extends State<ScanQR> {
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.indigo,
-                              padding: EdgeInsets.all(25),
+                              padding: EdgeInsets.all(20),
                               elevation: 2.0,
                             ),
                             child: Row(
@@ -194,7 +283,7 @@ class _ScanQRState extends State<ScanQR> {
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.redAccent,
-                                padding: EdgeInsets.all(25)),
+                                padding: EdgeInsets.all(20)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

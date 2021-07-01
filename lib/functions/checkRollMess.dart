@@ -1,6 +1,6 @@
 import 'package:gsheets_get/gsheets_get.dart';
 
-Future<bool> checkRollMess(String roll, String email) async {
+Future<Map<dynamic, dynamic>> checkRollMess(String roll, String email) async {
   final GSheetsGet sheet = GSheetsGet(
       sheetId: "1-nE8Cb_p3pcFGr4osgTjq26UZdm0NLRUqcM4Yxfv2oM",
       page: 1,
@@ -23,8 +23,19 @@ Future<bool> checkRollMess(String roll, String email) async {
 
   print(allowedRollList);
   print(allowedEmailList);
-  //allowedRollList[allowedEmailList.indexOf(email)];
-  if (allowedRollList.contains(roll)) return true;
-  if (allowedEmailList.contains(email)) return true;
-  return false;
+  Map map = {'isPresent': true, 'roll': roll};
+  if (allowedEmailList.contains(email)) {
+    //update the roll number from the GSheet incase the Azure API didn't return the roll for this user.
+    String rollNew = allowedRollList[allowedEmailList.indexOf(email)];
+    if (rollNew != null) {
+      print('*******New Roll Number: ' + rollNew + '******');
+      map['roll'] = rollNew;
+    }
+    return map;
+  } else if (allowedRollList.contains(roll)) {
+    return map;
+  } else {
+    map['isPresent'] = false;
+    return map;
+  }
 }
