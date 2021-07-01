@@ -27,7 +27,7 @@ Future<Map<dynamic, dynamic>> checkRollMess(String roll, String email) async {
   if (allowedEmailList.contains(email)) {
     //update the roll number from the GSheet incase the Azure API didn't return the roll for this user.
     String rollNew = allowedRollList[allowedEmailList.indexOf(email)];
-    if (rollNew != null) {
+    if (rollNew != "null") {
       print('*******New Roll Number: ' + rollNew + '******');
       map['roll'] = rollNew;
     }

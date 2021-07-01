@@ -3,6 +3,7 @@ import 'package:aad_oauth/model/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iitg_idcard_scanner/functions/checkRoll.dart';
 import 'package:iitg_idcard_scanner/functions/checkRollMess.dart';
 import 'package:iitg_idcard_scanner/pages/generateQR.dart';
 import 'package:iitg_idcard_scanner/pages/login_page.dart';
@@ -79,7 +80,7 @@ abstract class LoginStoreBase with Store {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('displayName', data['displayName']);
       prefs.setString('jobTitle', data['jobTitle']);
-      prefs.setString('rollNumber', data['surname']);
+      prefs.setString('rollNumber', checkedResult['roll']);
       print("\n\n\n\nSetting data complete\n\n\n\n");
       final _auth = FirebaseAuth.instance;
 
