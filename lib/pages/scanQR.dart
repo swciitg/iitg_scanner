@@ -16,7 +16,7 @@ import 'package:iitg_idcard_scanner/stores/otp_login_store.dart';
 import 'package:provider/provider.dart';
 
 //The number of minutes upto which the QR would be considered valid
-int maxMinutes = 5;
+int maxMinutes = 1;
 final _firestore = FirebaseFirestore.instance;
 
 class ScanQR extends StatefulWidget {

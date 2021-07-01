@@ -66,8 +66,10 @@ abstract class LoginStoreBase with Store {
                 msg: 'You are not a registered Mess Manager.');
             isLoginLoading = false;
             isOtpLoading = false;
-            Navigator.pop(context);
-            Navigator.pushNamed(context, LoginPage.id);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+                    (Route<dynamic> route) => false);
+            return;
           }
           await _auth.signInWithCredential(auth).then((UserCredential value) {
             if (value != null && value.user != null) {
@@ -138,8 +140,10 @@ abstract class LoginStoreBase with Store {
       Fluttertoast.showToast(msg: 'You are not a registered Mess Manager.');
       isLoginLoading = false;
       isOtpLoading = false;
-      Navigator.pop(context);
-      Navigator.pushNamed(context, LoginPage.id);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+              (Route<dynamic> route) => false);
+      return;
     }
     //verify phone number
     await _auth.signInWithCredential(_authCredential).catchError((error) {
@@ -200,7 +204,10 @@ abstract class LoginStoreBase with Store {
     QuerySnapshot querySnapshot =
         await _firestore.collection('mess_manager').get();
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      if (phoneNumber == doc.get('phone').toString()) return true;
+      print(phoneNumber);
+      print(doc.get('phone').toString());
+      if (phoneNumber == doc.get('phone').toString())
+        return true;
     }
     return false;
   }

@@ -26,7 +26,7 @@ class _ApprovedState extends State<Approved> {
   @override
   void initState() {
     super.initState();
-    //_loadWidget();
+    _loadWidget();
   }
 
   _loadWidget() async {
@@ -35,12 +35,7 @@ class _ApprovedState extends State<Approved> {
   }
 
   void navigationPage() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ShowScanDetails(
-                  rollNumber: rollNumber,
-                )));
+    Navigator.pop(context);
   }
 
   @override
