@@ -153,8 +153,8 @@ class _ScanQRState extends State<ScanQR> {
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width-150
-                          ),
+                              maxWidth:
+                                  MediaQuery.of(context).size.width - 150),
                         ),
                       ],
                     ),
@@ -162,7 +162,7 @@ class _ScanQRState extends State<ScanQR> {
                   width: MediaQuery.of(context).size.width,
                 ),
                 Container(
-                  child:  Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                     child: Row(
                       children: [
@@ -181,8 +181,8 @@ class _ScanQRState extends State<ScanQR> {
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width-150
-                          ),
+                              maxWidth:
+                                  MediaQuery.of(context).size.width - 150),
                         ),
                       ],
                     ),
@@ -209,8 +209,8 @@ class _ScanQRState extends State<ScanQR> {
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
                           constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width-150
-                          ),
+                              maxWidth:
+                                  MediaQuery.of(context).size.width - 150),
                         ),
                       ],
                     ),
@@ -278,8 +278,10 @@ class _ScanQRState extends State<ScanQR> {
                                               Approved(
                                                 rollNumber: rollNumber,
                                               )));
-                                } else
+                                } else {
+                                  Navigator.pop(context);
                                   Navigator.pushNamed(context, Rejected.id);
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -386,7 +388,7 @@ class _ScanQRState extends State<ScanQR> {
                   ],
                 ),
                 MySpaces.vLargeGapInBetween,
-               // MyFonts().heading1(qrScanRes, MyColors.black)
+                // MyFonts().heading1(qrScanRes, MyColors.black)
               ],
             ),
           ),

@@ -52,17 +52,18 @@ abstract class LoginStoreBase with Store {
         verificationCompleted: (AuthCredential auth) async {
           //add phone number check
           bool response = await checkPhoneFirebase(enteredContact);
-          if(response==false)
-          {
+          if (response == false) {
             print('\n\n\nNOT FOUND\n\n\n');
-            loginScaffoldKey.currentState.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.red,
-              content: Text(
-                'This number does not exist in the database of mess managers.',
-                style: TextStyle(color: Colors.white),
-              ),
-            ));
+            // loginScaffoldKey.currentState.showSnackBar(SnackBar(
+            //   behavior: SnackBarBehavior.floating,
+            //   backgroundColor: Colors.red,
+            //   content: Text(
+            //     'This number does not exist in the database of mess managers.',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            // ));
+            Fluttertoast.showToast(
+                msg: 'You are not a registered Mess Manager.');
             isLoginLoading = false;
             isOtpLoading = false;
             Navigator.pop(context);
@@ -103,6 +104,7 @@ abstract class LoginStoreBase with Store {
               style: TextStyle(color: Colors.white),
             ),
           ));
+          // Fluttertoast.showToast(msg: 'You are not a registered Mess Manager.');
           isLoginLoading = false;
         },
         codeSent: (String verificationId, [int forceResendingToken]) async {
@@ -122,23 +124,23 @@ abstract class LoginStoreBase with Store {
     final AuthCredential _authCredential = PhoneAuthProvider.credential(
         verificationId: actualCode, smsCode: smsCode);
     bool response = await checkPhoneFirebase(enteredContact);
-    print(response.toString()+"Karan");
-    if(response==false)
-      {
-        print('\n\n\nNOT FOUND\n\n\n');
-        loginScaffoldKey.currentState.showSnackBar(SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.red,
-          content: Text(
-            'This number does not exist in the database of mess managers.',
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
-        isLoginLoading = false;
-        isOtpLoading = false;
-        Navigator.pop(context);
-        Navigator.pushNamed(context, LoginPage.id);
-      }
+    print(response.toString() + "Karan");
+    if (response == false) {
+      print('\n\n\nNOT FOUND\n\n\n');
+      // loginScaffoldKey.currentState.showSnackBar(SnackBar(
+      //   behavior: SnackBarBehavior.floating,
+      //   backgroundColor: Colors.red,
+      //   content: Text(
+      //     'This number does not exist in the database of mess managers.',
+      //     style: TextStyle(color: Colors.white),
+      //   ),
+      // ));
+      Fluttertoast.showToast(msg: 'You are not a registered Mess Manager.');
+      isLoginLoading = false;
+      isOtpLoading = false;
+      Navigator.pop(context);
+      Navigator.pushNamed(context, LoginPage.id);
+    }
     //verify phone number
     await _auth.signInWithCredential(_authCredential).catchError((error) {
       isOtpLoading = false;
@@ -174,14 +176,15 @@ abstract class LoginStoreBase with Store {
           (Route<dynamic> route) => false);
     } else {
       print('\n\n\nNOT FOUND\n\n\n');
-      loginScaffoldKey.currentState.showSnackBar(SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.red,
-        content: Text(
-          'This number does not exist in the database of mess managers.',
-          style: TextStyle(color: Colors.white),
-        ),
-      ));
+      // loginScaffoldKey.currentState.showSnackBar(SnackBar(
+      //   behavior: SnackBarBehavior.floating,
+      //   backgroundColor: Colors.red,
+      //   content: Text(
+      //     'This number does not exist in the database of mess managers.',
+      //     style: TextStyle(color: Colors.white),
+      //   ),
+      // ));
+      Fluttertoast.showToast(msg: 'You are not a registered Mess Manager.');
       isLoginLoading = false;
       isOtpLoading = false;
       Navigator.pop(context);
@@ -194,12 +197,11 @@ abstract class LoginStoreBase with Store {
 
   Future<bool> checkPhoneFirebase(String phoneNumber) async {
     print('\n\n\nCheckiing in data');
-    QuerySnapshot querySnapshot = await _firestore.collection('mess_manager').get();
-    for(QueryDocumentSnapshot doc in querySnapshot.docs)
-      {
-        if(phoneNumber==doc.get('phone').toString())
-          return true;
-      }
+    QuerySnapshot querySnapshot =
+        await _firestore.collection('mess_manager').get();
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      if (phoneNumber == doc.get('phone').toString()) return true;
+    }
     return false;
   }
 
