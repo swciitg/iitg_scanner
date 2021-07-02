@@ -105,6 +105,107 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571795313541:android:528b5c915041c2ab652aec",
+        "android_client_info": {
+          "package_name": "com.swc_iitg.iitg_idcard_scanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571795313541-4g5pentv46bmh2eofg6cpl873o20l8kg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "7dea5586d9f919799cb41a696cea3c7dacd9c3bb"
+          }
+        },
+        {
+          "client_id": "571795313541-4h88sf1t2trjos29sotd4fj0u6iq0ha2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "8fbf625270ebe21f09a0edd536f3ab368419da0a"
+          }
+        },
+        {
+          "client_id": "571795313541-aed07pkei96b4jom750jrieg1rl02mlu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "95b2e8c70ef83ea925a3a3f642275dec3754aad7"
+          }
+        },
+        {
+          "client_id": "571795313541-bna176a9d8iv74t0fhlfj3mtkn3bm617.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "40393dcd497ff7039a7a32498f1909516ec01be5"
+          }
+        },
+        {
+          "client_id": "571795313541-c2sul4ap04p5bfk3gmp2pf5f3409vbin.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "9c10d4a3ef6263bc941a45de5acb8c609f98a16b"
+          }
+        },
+        {
+          "client_id": "571795313541-est6553k0p5i6mciegi1ihvp8j31bq9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "54b7cfa70e2af22ede19dfd2d0a35e4ba99f86de"
+          }
+        },
+        {
+          "client_id": "571795313541-n57hvflut6t6mmsht0mol113q6k2h9rq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "7b258edb48d310305e5401cff922d85cffd93fa4"
+          }
+        },
+        {
+          "client_id": "571795313541-se6d1nhdn6e90gu9cd7ksqpep4ldb1ku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "830199bb64d55490190d3fd7a0fad89e73785f68"
+          }
+        },
+        {
+          "client_id": "571795313541-u71j53n0smkaq6r36abtr0j554l8sfmm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swc_iitg.iitg_idcard_scanner",
+            "certificate_hash": "c9a1fec15fcf9394cd3068fb260181fbb9b97623"
+          }
+        },
+        {
+          "client_id": "571795313541-l999uejjgvhddbtqp8tpip4lmadmph87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSsyow43JogiLii5dn6PtmlbQolgxhi4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571795313541-l999uejjgvhddbtqp8tpip4lmadmph87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
