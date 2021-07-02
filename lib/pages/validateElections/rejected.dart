@@ -28,9 +28,7 @@ class _RejectedState extends State<Rejected> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => HomeManagement()),
-        (Route<dynamic> route) => false);
+    Navigator.pop(context);
   }
 
   @override

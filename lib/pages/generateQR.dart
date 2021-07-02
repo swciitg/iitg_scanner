@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iitg_idcard_scanner/stores/login_store.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,7 +57,7 @@ class _QRGeneratorState extends State<QRGenerator> {
               version: QrVersions.auto,
               eyeStyle: const QrEyeStyle(
                 eyeShape: QrEyeShape.square,
-                color: MyColors.blueLighter,
+                color: Colors.indigoAccent,
               ),
               dataModuleStyle: const QrDataModuleStyle(
                 dataModuleShape: QrDataModuleShape.circle,
@@ -78,40 +79,167 @@ class _QRGeneratorState extends State<QRGenerator> {
       String degree = loginStore.userData['jobTitle'];
       String rollNumber = loginStore.userData['rollNumber'];
       DateTime now = DateTime.now();
+      String month = now.month.toString().length==1?"0"+now.month.toString():now.month.toString();
+      String day = now.day.toString().length==1?"0"+now.day.toString():now.day.toString();
+      String second = now.second.toString().length==1?"0"+now.second.toString():now.second.toString();
+      String hour = now.hour.toString().length==1?"0"+now.hour.toString():now.hour.toString();
+      String minute = now.minute.toString().length==1?"0"+now.minute.toString():now.minute.toString();
       String date = now.year.toString() +
-          now.month.toString() +
-          now.day.toString() +
+          month +
+          day +
           "T" +
-          now.hour.toString() +
-          now.minute.toString() +
-          now.second.toString();
+          hour +
+          minute +
+          second;
       qrData = rollNumber + "," + date + "," + email + "," + userId;
       print(qrData);
       return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  onPressed: () {
-                    loginStore.signOut(context);
-                  })
-            ],
-          ),
           backgroundColor: MyColors.backgroundColor,
-          body: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: 280,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 100,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text("Name: ",style: GoogleFonts.rubik(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Container(
+                          child: Text(name,style: GoogleFonts.rubik(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,),),
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width-130
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text("Roll Number: ",style: GoogleFonts.rubik(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Text(rollNumber,style: GoogleFonts.rubik(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text("Course: ",style: GoogleFonts.rubik(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),),
+                        Expanded(
+                          child: SizedBox(),
+                        ),
+                        Text(degree,style: GoogleFonts.rubik(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width-40>280?280:MediaQuery.of(context).size.width-40,
                     child: qrFutureBuilder,
                   ),
-                ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 40),
+                    child: TextButton(
+                      onPressed: (){
+                        setState(() {
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        elevation: 2.0,
+                        primary: Colors.indigo,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.refresh,
+                            size: 30,
+                            color: MyColors.white,
+                          ),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                          Text(
+                            "Generate Now",
+                            style: GoogleFonts.rubik(
+                                color: MyColors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 40),
+                    child: TextButton(
+                      onPressed: () {
+                        loginStore.signOut(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        elevation: 2.0,
+                        primary: Colors.redAccent,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            size: 30,
+                            color: MyColors.white,
+                          ),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                          Text(
+                            "Log Out",
+                            style: GoogleFonts.rubik(
+                                color: MyColors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Expanded(
+                            child: SizedBox(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
-              MyFonts().body(
-                  name + "\n" + degree + "\n" + rollNumber, MyColors.black),
-            ],
+            )
           ),
         ),
       );

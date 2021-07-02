@@ -2,13 +2,18 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iitg_idcard_scanner/functions/checkRoll.dart';
+import 'package:iitg_idcard_scanner/functions/checkRollMess.dart';
 import 'package:iitg_idcard_scanner/pages/generateQR.dart';
+import 'package:iitg_idcard_scanner/pages/login_page.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:iitg_idcard_scanner/pages/microsoft.dart';
 import 'package:iitg_idcard_scanner/pages/homeManagement.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'login_store.g.dart';
 
 class LoginStore = LoginStoreBase with _$LoginStore;
@@ -32,15 +37,15 @@ abstract class LoginStoreBase with Store {
   Future<bool> isAlreadyAuthenticated() async {
     firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
-      String accessToken = await oauth.getAccessToken();
-      var response = await http.get('https://graph.microsoft.com/v1.0/me',
-          headers: {HttpHeaders.authorizationHeader: accessToken});
-      var data = jsonDecode(response.body);
+      if (firebaseUser.phoneNumber != null && firebaseUser.phoneNumber != "")
+        return false;
+      final prefs = await SharedPreferences.getInstance();
+      print("Got Here");
       userData = {};
       userData.addAll({
-        'displayName': data['displayName'],
-        'jobTitle': data['jobTitle'],
-        'rollNumber': data['surname'],
+        'displayName': prefs.getString('displayName') ?? '0',
+        'jobTitle': prefs.getString('jobTitle') ?? '0',
+        'rollNumber': prefs.getString('rollNumber') ?? '0',
       });
       return true;
     } else {
@@ -55,14 +60,36 @@ abstract class LoginStoreBase with Store {
         25,
         MediaQuery.of(context).size.width,
         MediaQuery.of(context).size.height - 25));
-    await oauth.login();
+    try {
+      await oauth.login();
+    } catch (exception) {
+      Fluttertoast.showToast(msg: "Something went wrong!");
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+          (Route<dynamic> route) => false);
+    }
     String accessToken = await oauth.getAccessToken();
     if (accessToken != null) {
       var response = await http.get('https://graph.microsoft.com/v1.0/me',
           headers: {HttpHeaders.authorizationHeader: accessToken});
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        Fluttertoast.showToast(msg: "Something went wrong!");
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => MicrosoftLogin()),
+            (Route<dynamic> route) => false);
+        return;
+      }
       var data = jsonDecode(response.body);
       print(data);
-
+      print("data was printed");
+      //check and compare mail and roll number in google sheet and assign hostel to shared prefs
+      Map checkedResult = await checkRollMess(data['surname'], data['mail']);
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('displayName', data['displayName']);
+      prefs.setString('jobTitle', data['jobTitle']);
+      prefs.setString('rollNumber', checkedResult['roll']);
+      print("\n\n\n\nSetting data complete\n\n\n\n");
       final _auth = FirebaseAuth.instance;
 
       await _auth
@@ -73,12 +100,19 @@ abstract class LoginStoreBase with Store {
                 print('Authentication successful'),
                 onAuthenticationSuccessful(context, value, data),
               })
-          .catchError((_) {
+          .catchError((err) {
+        print(err);
         _auth
             .signInWithEmailAndPassword(email: data['mail'], password: '123456')
             .then((UserCredential value) {
           print('Authentication successful');
           onAuthenticationSuccessful(context, value, data);
+        }).catchError((err) {
+          print(err);
+          print(_auth.currentUser);
+          Fluttertoast.showToast(
+              msg: "Could not authenticate please try later");
+          //show an error toast
         });
       });
     } else
@@ -88,11 +122,12 @@ abstract class LoginStoreBase with Store {
   Future<void> onAuthenticationSuccessful(
       BuildContext context, UserCredential result, var data) async {
     firebaseUser = result.user;
+    final prefs = await SharedPreferences.getInstance();
     userData = {};
     userData.addAll({
-      'displayName': data['displayName'],
-      'jobTitle': data['jobTitle'],
-      'rollNumber': data['surname'],
+      'displayName': prefs.getString('displayName') ?? '0',
+      'jobTitle': prefs.getString('jobTitle') ?? '0',
+      'rollNumber': prefs.getString('rollNumber') ?? '0',
     });
 
     Navigator.of(context).pushAndRemoveUntil(
@@ -102,6 +137,8 @@ abstract class LoginStoreBase with Store {
 
   @action
   Future<void> signOut(BuildContext context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
     await _auth.signOut().then((value) async {
       oauth.logout();
       await Navigator.of(context).pushAndRemoveUntil(

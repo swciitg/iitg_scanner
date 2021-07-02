@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.iitg_idcard_scanner">
+    package="com.swc_iitg.iitg_idcard_scanner">
+    <uses-permission android:name= "android.permission.INTERNET"/>
    <application
         android:label="IITG Scanner"
         android:icon="@mipmap/launcher_icon">

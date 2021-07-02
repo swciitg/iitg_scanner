@@ -47,7 +47,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.iitg_idcard_scanner"
+        applicationId "com.swc_iitg.iitg_idcard_scanner"
         multiDexEnabled true
         minSdkVersion 18
         targetSdkVersion 30
@@ -79,4 +79,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.browser:browser:1.2.0"
 }
