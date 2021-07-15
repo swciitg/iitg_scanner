@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -42,6 +44,7 @@ class _ScanQRState extends State<ScanQR> {
   String rollNumber = "";
   String email = "";
   String hostel = "subansiri";
+  bool scanResult = false;
 
   Future<String> scanQRNormal() async {
     try {
@@ -148,7 +151,7 @@ class _ScanQRState extends State<ScanQR> {
                         ),
                         Container(
                           child: Text(
-                            email,
+                            scanResult ? email : "--❌--",
                             style: GoogleFonts.rubik(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
@@ -176,7 +179,7 @@ class _ScanQRState extends State<ScanQR> {
                         ),
                         Container(
                           child: Text(
-                            rollNumber,
+                            scanResult ? rollNumber : "--❌--",
                             style: GoogleFonts.rubik(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
@@ -204,7 +207,7 @@ class _ScanQRState extends State<ScanQR> {
                         ),
                         Container(
                           child: Text(
-                            hostel,
+                            scanResult ? hostel : "--❌--",
                             style: GoogleFonts.rubik(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
@@ -248,16 +251,82 @@ class _ScanQRState extends State<ScanQR> {
 
                               if (minutes > maxMinutes ||
                                   !checkRoll(rollNumber)) {
-                                final badReadSnackBar = SnackBar(
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: MyColors.black,
-                                    content: MyFonts().body(
-                                        'Bad read! Please try again or re-generate the QR Code.',
-                                        MyColors.white));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(badReadSnackBar);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        height: 100.0,
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 10, sigmaY: 10),
+                                          child: SimpleDialog(
+                                            title: Text(
+                                              "Wrong QR code",
+                                              style: GoogleFonts.rubik(
+                                                  color: Colors.red,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: 7.0,
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    "Please regenerate!",
+                                                    style: GoogleFonts.rubik(
+                                                        color: Colors.indigo,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.0,
+                                                  ),
+                                                  RaisedButton(
+                                                    // color: Colors.green,
+                                                    // shape: RoundedRectangleBorder(
+                                                    //   borderRadius:
+                                                    //       BorderRadius.circular(25.0),
+
+                                                    color: Colors.indigo,
+                                                    padding: EdgeInsets.all(20),
+                                                    elevation: 2.0,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        25)),
+
+                                                    child: Text(
+                                                      "OK",
+                                                      style: GoogleFonts.rubik(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      setState(() {
+                                                        scanResult = false;
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        //),
+                                      );
+                                    });
                               } else {
                                 // Send to a Loader Widget temporarily
+
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>
@@ -278,9 +347,15 @@ class _ScanQRState extends State<ScanQR> {
                                               Approved(
                                                 rollNumber: rollNumber,
                                               )));
+                                  setState(() {
+                                    scanResult = true;
+                                  });
                                 } else {
                                   Navigator.pop(context);
                                   Navigator.pushNamed(context, Rejected.id);
+                                  setState(() {
+                                    scanResult=false;
+                                  });
                                 }
                               }
                             },

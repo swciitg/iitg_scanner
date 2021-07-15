@@ -23,7 +23,7 @@ class _RejectedState extends State<Rejected> {
   }
 
   _loadWidget() async {
-    var _duration = Duration(seconds: 3);
+    var _duration = Duration(seconds: 1);
     return Timer(_duration, navigationPage);
   }
 
